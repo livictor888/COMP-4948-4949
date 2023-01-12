@@ -23,9 +23,26 @@ def getStock(stk, ttlDays):
     df = pdr.get_data_yahoo(stk, start=dtPastStr, end=dtNowStr)
     return df
 
-NUM_DAYS = 1000
-# Search Yahoo for the correct symbols.
-df       = getStock('TD.TO', NUM_DAYS)
-print("Toronto Dominion Bank Stock")
-print(df)
 
+import matplotlib.pyplot as plt
+def showStocks(df, stock, title):
+    plt.plot(df.index, df['Close'], label=stock)
+    plt.xticks(rotation=70)
+
+NUM_DAYS = 20
+df = getStock('AMZN', NUM_DAYS)
+df['Close'] = df['Close'].pct_change()
+showStocks(df,'AMZN',"AMZN Close Prices")
+
+df = getStock('AAPL', NUM_DAYS)
+df['Close'] = df['Close'].pct_change()
+showStocks(df, 'AAPL', "AAPL Close Prices")
+
+df = getStock('MSFT', NUM_DAYS)
+df['Close'] = df['Close'].pct_change()
+showStocks(df, 'MSFT', "MSFT Close Prices")
+
+# Make graphs appear.
+
+plt.legend()
+plt.show()
