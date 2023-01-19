@@ -27,6 +27,7 @@ button.click()  # Click the button.
 
 time.sleep(3)
 
+
 # Extracts text from scraped content.
 def extractText(data):
     text    = data.get_attribute('innerHTML')
