@@ -1,0 +1,37 @@
+<annotation>
+	<folder>my-project-name</folder>
+	<filename>Photos-Baby-Vicuna-Born-Berlin.jpg</filename>
+	<path>/my-project-name/Photos-Baby-Vicuna-Born-Berlin.jpg</path>
+	<source>
+		<database>Unspecified</database>
+	</source>
+	<size>
+		<width>3610</width>
+		<height>2490</height>
+		<depth>3</depth>
+	</size>
+	<object>
+		<name>eye</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>1404</xmin>
+			<ymin>197</ymin>
+			<xmax>1526</xmax>
+			<ymax>334</ymax>
+		</bndbox>
+	</object>
+	<object>
+		<name>mouth</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>1183</xmin>
+			<ymin>357</ymin>
+			<xmax>1343</xmax>
+			<ymax>471</ymax>
+		</bndbox>
+	</object>
+</annotation>

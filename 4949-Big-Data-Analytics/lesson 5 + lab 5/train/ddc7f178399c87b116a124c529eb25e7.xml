@@ -1,0 +1,37 @@
+<annotation>
+	<folder>my-project-name</folder>
+	<filename>ddc7f178399c87b116a124c529eb25e7.jpg</filename>
+	<path>/my-project-name/ddc7f178399c87b116a124c529eb25e7.jpg</path>
+	<source>
+		<database>Unspecified</database>
+	</source>
+	<size>
+		<width>555</width>
+		<height>555</height>
+		<depth>3</depth>
+	</size>
+	<object>
+		<name>eye</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>135</xmin>
+			<ymin>125</ymin>
+			<xmax>164</xmax>
+			<ymax>144</ymax>
+		</bndbox>
+	</object>
+	<object>
+		<name>mouth</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>103</xmin>
+			<ymin>141</ymin>
+			<xmax>129</xmax>
+			<ymax>164</ymax>
+		</bndbox>
+	</object>
+</annotation>
