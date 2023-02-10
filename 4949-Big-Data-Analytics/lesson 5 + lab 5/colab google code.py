@@ -1,6 +1,7 @@
 import torch
 print(torch.cuda.is_available())
-!pip install detecto
+# install torcth and detecto and make sure GPU is on in the notebook settings
+# !pip install detecto
 
 from detecto import core, utils, visualize
 from detecto.visualize import show_labeled_image, plot_prediction_grid
