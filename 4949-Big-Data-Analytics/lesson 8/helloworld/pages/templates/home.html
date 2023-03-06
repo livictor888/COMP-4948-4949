@@ -1,0 +1,31 @@
+<!-- templates/home.html -->
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Home page</h1>
+
+  <!-- This form references the homePost route. -->
+<form action="{% url 'homePost' %}" method="post">
+{% csrf_token %}
+
+<h3>Years Work Experience</h3>
+
+<!-- Show radio button list named 'choice' -->
+{% for choice in mynumbers %}
+    <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice }}">
+    <label for="choice{{ forloop.counter }}">{{ choice }}</label><br>
+{% endfor %}
+
+<!—Submit button is also contained in the form -->
+  <h3>GMAT Score</h3>
+<input type="text" id="gmat" name="gmat"><br><br>
+<input type="submit" value="POST YOUR CHOICE">
+</form>
+<!-- End of form. -->
+
+<!-- This error will notify the user if there are issues with the POST request -->
+{% if errorMessage %}<p><strong>{{errorMessage}}</strong></p>{% endif %}
+{% endblock content %}
+
+
+
