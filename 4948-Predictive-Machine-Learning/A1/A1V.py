@@ -1,3 +1,4 @@
+from matplotlib import pyplot as plt
 from sklearn.preprocessing import LabelEncoder
 from sklearn.feature_selection import RFE
 from sklearn.feature_selection import f_regression
@@ -86,21 +87,22 @@ Generate a summary using the cleaned data
 # prof.to_file(output_file='output.html')
 
 
-# # Correlation matrix
-# plt.figure(figsize=(11, 11))
-# sns.heatmap(df.corr(), annot=True, cmap="coolwarm")
-# plt.title('Correlation Matrix')
-# plt.show()
-#
+# Correlation matrix
+plt.figure(figsize=(11, 11))
+sns.heatmap(df.corr(), annot=True, cmap="coolwarm")
+plt.title('Correlation Matrix')
+plt.show()
+
 
 """
 PLOTS OF VARIABLES
 """
-# # Applicant Income plots
-# plt.figure(figsize=(10, 6))
-# sns.histplot(x='ApplicantIncome', data=df)
-# plt.title('Applicant Income Distribution')
-# plt.show()
+# Plot a histogram of the 'Temperature' column
+plt.hist(df['Temperature'], bins=20)
+plt.title('Histogram of Temperature')
+plt.xlabel('Temperature')
+plt.ylabel('Frequency')
+plt.show()
 #
 # # Coapplicant Income plots
 # plt.figure(figsize=(10, 6))

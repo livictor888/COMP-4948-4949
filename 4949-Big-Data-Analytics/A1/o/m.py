@@ -17,9 +17,11 @@ from sklearn.preprocessing import MinMaxScaler
 
 pd.set_option('display.max_columns', None)
 pd.set_option('display.width', 250)
-PATH = Path("C:\\Users\Victor\\PycharmProjects\\COMP-4948-4949\\4949-Big-Data-Analytics\\A1\\powerconsumption.csv")
 
-df = pd.read_csv(PATH, sep=',', parse_dates=[0])
+PATH = r"C:/datasets/"
+CSV_DATA = "powerconsumption.csv"
+df = pd.read_csv(PATH + CSV_DATA, sep=',')
+
 print("ORIGINAL DF--------------------")
 print(df)
 print("ORIGINAL DF--------------------")
@@ -30,13 +32,17 @@ df = df.set_index('Datetime')
 # Remove PowerConsumption_Zone2 and PowerConsumption_Zone3 columns
 df.drop(['PowerConsumption_Zone1', 'PowerConsumption_Zone3'], axis=1, inplace=True)
 
+
+"""
 print(df.head())
 print(df.info)
 df.hist(figsize=(12, 12))
 plt.show()
+"""
 
-print(df.isnull().values.any())  # False, there are no NUll values in the dataset
-print(df.duplicated().values.any())  # False, there are no duplicated rows
+
+# print(df.isnull().values.any())  # False, there are no NUll values in the dataset
+# print(df.duplicated().values.any())  # False, there are no duplicated rows
 
 """FROM KEGGLE"""
 def create_features(df):
@@ -129,7 +135,11 @@ plt.show()
 #
 #
 #
-#
+#\
+
+
+
+
 # ##Correlation Matrix
 #
 # #Renaming axis labels
@@ -147,6 +157,14 @@ plt.show()
 #
 # #Generating plot
 # plt.show()
+
+
+
+
+
+
+
+
 #
 #
 # ## Feature Engineering extracts the hour, day of the week, quarter, month etc. from the datetime index
