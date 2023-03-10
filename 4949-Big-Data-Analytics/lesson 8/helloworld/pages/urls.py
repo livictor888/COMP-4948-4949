@@ -1,6 +1,6 @@
 # pages/urls.py
 from django.urls import path
-from .views import homePageView, aboutPageView, victorPageView, results, homePost
+from .views import homePageView, aboutPageView, victorPageView, results, homePost, todos
 
 urlpatterns = [
     path('', homePageView, name='home'),
@@ -9,4 +9,5 @@ urlpatterns = [
     path('homePost/', homePost, name='homePost'),
     path('<int:choice>/results/', results, name='results'),
     path('results/<int:choice>/<str:gmat>/', results, name='results'),
+    path('todos', todos, name='todos'),
 ]
