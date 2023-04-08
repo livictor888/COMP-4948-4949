@@ -1,0 +1,40 @@
+<!-- templates/home.html -->
+{% extends "base.html" %} {% block content %}
+<div class="container">
+  <h1>Is your bill fake?</h1>
+
+  <!-- This form references the homePost route. -->
+  <form action="{% url 'homePost' %}" method="post">
+    {% csrf_token %}
+
+    <h2>Enter the dimensions in mm:</h2>
+    <br />
+
+    <h3>Diagonal Length</h3>
+    <input type="text" id="diagonal" name="diagonal" /><br />
+
+    <h3>Height Left</h3>
+    <input type="text" id="height_left" name="height_left" /><br />
+
+    <h3>Height Right</h3>
+    <input type="text" id="height_right" name="height_right" /><br />
+
+    <h3>Lower Margin</h3>
+    <input type="text" id="margin_low" name="margin_low" /><br />
+
+    <h3>Upper Margin</h3>
+    <input type="text" id="margin_up" name="margin_up" /><br />
+
+    <h3>Length</h3>
+    <input type="text" id="length" name="length" /><br />
+
+    <!-- Submit button is also contained in the form -->
+    <input type="submit" value="Submit" />
+  </form>
+  <!-- End of form. -->
+
+  <!-- This error will notify the user if there are issues with the POST request -->
+  {% if errorMessage %}
+  <p><strong>{{errorMessage}}</strong></p>
+  {% endif %} {% endblock content %}
+</div>

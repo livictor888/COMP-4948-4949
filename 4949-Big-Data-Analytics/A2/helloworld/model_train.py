@@ -1,6 +1,3 @@
-# Actually use 4 features
-# Final code
-
 import pandas as pd
 import numpy as np
 import pickle
@@ -9,31 +6,28 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, confusion_matrix, recall_score, precision_score
 
-def preprocess_data(df):
-    # Fill missing values
-    df['Age'].fillna(df['Age'].mean(), inplace=True)
-    df['Embarked'].fillna(df['Embarked'].mode()[0], inplace=True)
 
-    # Encode categorical variables
-    df['Sex'] = df['Sex'].map({'male': 0, 'female': 1})
-    df['Embarked'] = df['Embarked'].map({'C': 0, 'Q': 1, 'S': 2})
+def preprocess_data(df):
+    # Replace missing values
+    df.fillna(df.mean(), inplace=True)
 
     return df
 
+
 # Read the dataset
-url = 'https://raw.githubusercontent.com/kelly-olsson/titanic/main/train.csv'
-df = pd.read_csv(url)
+df = pd.read_csv('fake_bills.csv', delimiter=";")
+print(df.head())
 
 # Preprocess the data
 df = preprocess_data(df)
 
 # Separate into x and y values
-predictorVariables = ['Pclass', 'Sex', 'Age', 'SibSp', 'Parch', 'Fare', 'Embarked']
+predictorVariables = ['length', 'margin_low', 'margin_up', 'diagonal', 'height_right', 'height_left']
 X = df[predictorVariables]
-y = df['Survived']
+y = df['is_genuine']
 
 # Show chi-square scores for each feature
-test = SelectKBest(score_func=chi2, k=4)
+test = SelectKBest(score_func=chi2, k=6)
 chiScores = test.fit(X, y)
 np.set_printoptions(precision=3)
 
@@ -80,15 +74,21 @@ print("Recall: " + str(recall))
 print("Precision: " + str(precision))
 
 # Create a single prediction.
-singleSampleDf = pd.DataFrame(columns=['Pclass', 'Sex', 'Age', 'Fare'])
-pClass =  3
-sex = 0
-age = 22
-fare = 7.25
+singleSampleDf = pd.DataFrame(columns=features)
 
-passengerData = {'Pclass':pClass, 'Sex':sex, 'Age':age, 'Fare':fare}
+# Replace these values with the desired data points for prediction
+data_point = {
+    'length': 171.81,
+    'margin_low': 4.66,
+    'margin_up': 3.02,
+    'diagonal': 111.76,
+    'height_right': 104.23,
+    'height_left': 103.54
+}
+
+billData = {k: data_point[k] for k in features}
 singleSampleDf = pd.concat([singleSampleDf,
-                            pd.DataFrame.from_records([passengerData])])
+                            pd.DataFrame.from_records([billData])])
 
 singlePrediction = loadedModel.predict(singleSampleDf)
 print("Single prediction: " + str(singlePrediction))

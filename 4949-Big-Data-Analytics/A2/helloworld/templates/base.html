@@ -1,0 +1,133 @@
+<!-- templates/base.html -->
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet">
+    <style type="text/css">
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: calc(100vh - 50px);
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://www.usnews.com/object/image/00000182-36b0-dbde-a7db-fff8f6b70000/gettyimages-913705368.jpg?update-time=1658775015338&size=responsive970');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-attachment: fixed;
+            color: #155f36;
+        }
+
+        h1 {
+            font-family: 'Roboto', serif;
+            font-size: 60px; /* Increased font-size */
+            text-align: center;
+            color: #155f36;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            background-color: rgba(255, 255, 255, 0.9);
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        form {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        h3 {
+            font-size: 22px; /* Increased font-size */
+            margin-bottom: 5px;
+            color: #155f36;
+        }
+
+        input[type="submit"] {
+            background-color: #155f36;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 16px; /* Increased font-size */
+            margin-top: 20px;
+            display: block;
+            width: 100%;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0b7454;
+        }
+
+        strong {
+            color: red;
+        }
+
+        .results-container {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .results-container p {
+            font-size: 24px; /* Increased font-size */
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .results-container ul {
+            list-style-type: none;
+            padding-left: 0;
+            font-size: 22px; /* Increased font-size */
+            font-weight: 600;
+        }
+
+        .results-container li {
+            margin-bottom: 10px;
+        }
+
+        .prediction {
+            font-size: 28px; /* Increased font-size */
+            font-weight: 700;
+            color: #0e7fdb;
+        }
+
+        label {
+            font-size: 18px; /* Increased font-size */
+        }
+
+        .back-button {
+            background-color: #155f36;
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 3px;
+            margin-top: 20px;
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        .back-button:hover {
+            background-color: #0b7454;
+        }
+    </style>
+</head>
+<body>
+{% block content %}{% endblock %}
+</body>
+</html>

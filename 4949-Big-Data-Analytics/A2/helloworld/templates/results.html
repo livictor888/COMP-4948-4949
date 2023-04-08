@@ -1,0 +1,28 @@
+<!-- templates/results.html -->
+{% extends "base.html" %} {% block content %}
+<div class="container">
+  <h1>Results</h1>
+
+  <div class="results-container">
+    <h2>Your bill's dimensions are:</h2>
+    <ul>
+      <li>Diagonal: {{diagonal}}</li>
+      <li>Height Left: {{height_left}}</li>
+      <li>Height Right: {{height_right}}</li>
+      <li>Lower Margin: {{margin_low}}</li>
+      <li>Upper Margin: {{margin_up}}</li>
+      <li>Length: {{length}}</li>
+    </ul>
+    <p>
+      Prediction:
+      <span class="prediction"
+        >{% if prediction == False %}The bill is fake!{% else %}The bill is
+        genuine!{% endif %}</span
+      >
+    </p>
+    <!-- <p>Prediction: <span class="prediction">{{prediction}}</span></p> -->
+  </div>
+
+  <a href="/" class="back-button">Go Back to bill specifications</a>
+</div>
+{% endblock content %}
