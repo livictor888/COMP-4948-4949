@@ -115,112 +115,109 @@ for model_name, metrics in results.items():
     print(metrics)
     print("\n")
 
+#
+# """
+# Generate a summary and plot variable graphs
+# """
+# from pandas_profiling import ProfileReport
+#
+# # Generate the profiling report
+# profile = ProfileReport(df, title="Tesla Dataset Profiling Report", explorative=True)
+#
+# # Save the report as an HTML file
+# profile.to_file("output.html")
+#
+# # Plot histogram of 'Adj Close'
+# plt.figure(figsize=(10, 5))
+# sns.histplot(df['Adj Close'], bins=50, kde=True)
+# plt.title('Histogram of Adj Close')
+# plt.xlabel('Adj Close')
+# plt.ylabel('Frequency')
+# plt.show()
+#
+# # Plot box plot of 'Adj Close'
+# plt.figure(figsize=(10, 5))
+# sns.boxplot(x=df['Adj Close'])
+# plt.title('Box Plot of Adj Close')
+# plt.xlabel('Adj Close')
+# plt.show()
+#
+# # Plot trends for Open, High, Low, Close, and Adj Close
+# plt.figure(figsize=(15, 8))
+# plt.plot(df.index, df['Open'], label='Open')
+# plt.plot(df.index, df['High'], label='High')
+# plt.plot(df.index, df['Low'], label='Low')
+# plt.plot(df.index, df['Close'], label='Close')
+# plt.plot(df.index, df['Adj Close'], label='Adj Close')
+#
+# # Customize plot
+# plt.title('Trends in Opening, Closing, High, Low, and Adjusted Closing Prices')
+# plt.xlabel('Date')
+# plt.ylabel('Price')
+# plt.legend()
+# plt.grid()
+# plt.show()
+#
+# # Plot histogram of 'Volume'
+# plt.figure(figsize=(10, 5))
+# sns.histplot(df['Volume'], bins=50, kde=True)
+# plt.title('Histogram of Trading Volume')
+# plt.xlabel('Volume')
+# plt.ylabel('Frequency')
+# plt.show()
+#
+# # Plot box plot of 'Volume'
+# plt.figure(figsize=(10, 5))
+# sns.boxplot(x=df['Volume'])
+# plt.title('Box Plot of Trading Volume')
+# plt.xlabel('Volume')
+# plt.show()
+#
+# # Create a scatter plot of trading volume vs adjusted closing price
+# plt.figure(figsize=(10, 5))
+# sns.scatterplot(x=df['Volume'], y=df['Adj Close'])
+# plt.title('Scatter Plot: Trading Volume vs Adjusted Closing Price')
+# plt.xlabel('Trading Volume')
+# plt.ylabel('Adjusted Closing Price')
+# plt.show()
+
 
 """
-Generate a summary and plot variable graphs
+Create NN Model
 """
-from pandas_profiling import ProfileReport
+from keras.optimizers import Adam, RMSprop
 
-# Generate the profiling report
-profile = ProfileReport(df, title="Tesla Dataset Profiling Report", explorative=True)
 
-# Save the report as an HTML file
-profile.to_file("output.html")
+def create_nn_model(optimizer='rmsprop', neurons=30, lr=0.1, activation='relu', initializer='he_normal'):
+    model = Sequential()
+    model.add(Dense(neurons, activation=activation, kernel_initializer=initializer, input_dim=5))
+    model.add(Dense(neurons, activation=activation, kernel_initializer=initializer))
+    model.add(Dense(1, activation='linear'))
 
-# Plot histogram of 'Adj Close'
-plt.figure(figsize=(10, 5))
-sns.histplot(df['Adj Close'], bins=50, kde=True)
-plt.title('Histogram of Adj Close')
-plt.xlabel('Adj Close')
-plt.ylabel('Frequency')
-plt.show()
+    if optimizer == 'adam':
+        opt = Adam(learning_rate=lr)
+    elif optimizer == 'rmsprop':
+        opt = RMSprop(learning_rate=lr)
 
-# Plot box plot of 'Adj Close'
-plt.figure(figsize=(10, 5))
-sns.boxplot(x=df['Adj Close'])
-plt.title('Box Plot of Adj Close')
-plt.xlabel('Adj Close')
-plt.show()
+    model.compile(optimizer=opt, loss='mean_squared_error')
+    return model
 
-# Plot trends for Open, High, Low, Close, and Adj Close
-plt.figure(figsize=(15, 8))
-plt.plot(df.index, df['Open'], label='Open')
-plt.plot(df.index, df['High'], label='High')
-plt.plot(df.index, df['Low'], label='Low')
-plt.plot(df.index, df['Close'], label='Close')
-plt.plot(df.index, df['Adj Close'], label='Adj Close')
 
-# Customize plot
-plt.title('Trends in Opening, Closing, High, Low, and Adjusted Closing Prices')
-plt.xlabel('Date')
-plt.ylabel('Price')
-plt.legend()
-plt.grid()
-plt.show()
-
-# Plot histogram of 'Volume'
-plt.figure(figsize=(10, 5))
-sns.histplot(df['Volume'], bins=50, kde=True)
-plt.title('Histogram of Trading Volume')
-plt.xlabel('Volume')
-plt.ylabel('Frequency')
-plt.show()
-
-# Plot box plot of 'Volume'
-plt.figure(figsize=(10, 5))
-sns.boxplot(x=df['Volume'])
-plt.title('Box Plot of Trading Volume')
-plt.xlabel('Volume')
-plt.show()
-
-# Create a scatter plot of trading volume vs adjusted closing price
-plt.figure(figsize=(10, 5))
-sns.scatterplot(x=df['Volume'], y=df['Adj Close'])
-plt.title('Scatter Plot: Trading Volume vs Adjusted Closing Price')
-plt.xlabel('Trading Volume')
-plt.ylabel('Adjusted Closing Price')
-plt.show()
+# Define the grid search parameters
+param_grid = {
+    'optimizer': ['adam', 'rmsprop'],
+    'neurons': [10, 20, 30],
+    'lr': [0.001, 0.01, 0.1],
+    'activation': ['relu', 'tanh'],
+    'initializer': ['he_normal', 'he_uniform']
+}
 
 
 
-#
-#
-# """
-# Create NN Model
-# """
-# from keras.optimizers import Adam, RMSprop
-#
-#
-# def create_nn_model(optimizer='adam', neurons=10, lr=0.001, activation='relu', initializer='he_normal'):
-#     model = Sequential()
-#     model.add(Dense(neurons, activation=activation, kernel_initializer=initializer, input_dim=5))
-#     model.add(Dense(neurons, activation=activation, kernel_initializer=initializer))
-#     model.add(Dense(1, activation='linear'))
-#
-#     if optimizer == 'adam':
-#         opt = Adam(learning_rate=lr)
-#     elif optimizer == 'rmsprop':
-#         opt = RMSprop(learning_rate=lr)
-#
-#     model.compile(optimizer=opt, loss='mean_squared_error')
-#     return model
-#
-#
-# # Define the grid search parameters
-# param_grid = {
-#     'optimizer': ['adam', 'rmsprop'],
-#     'neurons': [10, 20, 30],
-#     'lr': [0.001, 0.01, 0.1],
-#     'activation': ['relu', 'tanh'],
-#     'initializer': ['he_normal', 'he_uniform']
-# }
-#
-#
-#
-#
-# """
-# Perform Grid Search
-# """
+
+"""
+Perform Grid Search
+"""
 # from skopt import BayesSearchCV
 # from skopt.space import Real, Categorical, Integer
 # from keras.optimizers import Adam
@@ -254,85 +251,90 @@ plt.show()
 # params = grid_search_result.cv_results_['params']
 # for mean, stdev, param in zip(means, stds, params):
 #     print(f"{mean:.4f} ({stdev:.4f}) with: {param}")
-#
-# """
-# Optimized parameters
-# Best: -1.6165573675727283 using
-# {'activation': 'relu', 'initializer': 'he_uniform', 'lr': 0.1, 'neurons': 30, 'optimizer': 'rmsprop'}
-#
-# Best: -2.35016944334606 using
-# {'activation': 'relu', 'initializer': 'he_normal', 'lr': 0.01, 'neurons': 20, 'optimizer': 'adam'}
-#
-# Best: -2.0810359138867462 using
-# {'activation': 'relu', 'initializer': 'he_normal', 'lr': 0.1, 'neurons': 10, 'optimizer': 'rmsprop'}
-#
-# """
-#
-# """
-# Create an Optimized Neural Network Model
-# """
-# from keras.models import Sequential
-# from keras.layers import Dense
-# from keras.optimizers import Adam, RMSprop
-# from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
-# import matplotlib.pyplot as plt
-#
-# # Define the optimized parameters obtained from the grid search
-# optimizer = 'rmsprop'
-# neurons = 10
-# lr = 0.1
-# activation = 'relu'
-# initializer = 'he_normal'
-#
-# # Create the optimized NN model
-# def create_nn_model(optimizer, neurons, lr, activation, initializer):
-#     model = Sequential()
-#     model.add(Dense(neurons, activation=activation, kernel_initializer=initializer, input_dim=5))
-#     model.add(Dense(neurons, activation=activation, kernel_initializer=initializer))
-#     model.add(Dense(1, activation='linear'))
-#
-#     if optimizer == 'adam':
-#         opt = Adam(learning_rate=lr)
-#     elif optimizer == 'rmsprop':
-#         opt = RMSprop(learning_rate=lr)
-#
-#     model.compile(optimizer=opt, loss='mean_squared_error')
-#     return model
-#
-# optimized_model = create_nn_model(optimizer, neurons, lr, activation, initializer)
-#
-# # Train the optimized model
-# history = optimized_model.fit(X_train_scaled, y_train, epochs=50, batch_size=16, verbose=0, validation_split=0.2)
-#
-# # Predict on the test set
-# y_pred = optimized_model.predict(X_test_scaled)
-#
-# # Calculate the mean squared error
-# mse = mean_squared_error(y_test, y_pred)
-#
-# # Calculate the mean absolute error
-# mae = mean_absolute_error(y_test, y_pred)
-#
-# # Calculate the R-squared score
-# r2score = r2_score(y_test, y_pred)
-#
-# # Calculate the root mean squared error
-# rmse = mean_squared_error(y_test, y_pred, squared=False)
-#
-# # Print the metrics
-# print(f"R-squared: {r2score:.4f}")
-# print(f"Mean Squared Error: {mse:.4f}")
-# print(f"Root Mean Squared Error: {rmse:.4f}")
-# print(f"Mean Absolute Error: {mae:.4f}")
-#
-# # Plot the model loss during training
-# plt.plot(history.history['loss'])
-# plt.plot(history.history['val_loss'])
-# plt.title('Model Loss')
-# plt.ylabel('Loss')
-# plt.xlabel('Epoch')
-# plt.legend(['train', 'validation'], loc='upper right')
-# plt.show()
-#
-#
-#
+
+"""
+Optimized parameters
+Best: -1.6165573675727283 using
+{'activation': 'relu', 'initializer': 'he_uniform', 'lr': 0.1, 'neurons': 30, 'optimizer': 'rmsprop'}
+
+Best: -2.35016944334606 using
+{'activation': 'relu', 'initializer': 'he_normal', 'lr': 0.01, 'neurons': 20, 'optimizer': 'adam'}
+
+Best: -2.0810359138867462 using
+{'activation': 'relu', 'initializer': 'he_normal', 'lr': 0.1, 'neurons': 10, 'optimizer': 'rmsprop'}
+
+Best: -1.6094852824378314 using 
+{'activation': 'relu', 'initializer': 'he_uniform', 'lr': 0.1, 'neurons': 30, 'optimizer': 'rmsprop'}
+
+"""
+
+"""
+Create an Optimized Neural Network Model
+"""
+from keras.models import Sequential
+from keras.layers import Dense
+from keras.optimizers import Adam, RMSprop
+from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
+import matplotlib.pyplot as plt
+
+# Define the optimized parameters obtained from the grid search
+optimizer = 'rmsprop'
+neurons = 30
+lr = 0.1
+activation = 'relu'
+initializer = 'he_uniform'
+
+
+# Create the optimized NN model
+def create_nn_model(optimizer, neurons, lr, activation, initializer):
+    model = Sequential()
+    model.add(Dense(neurons, activation=activation, kernel_initializer=initializer, input_dim=5))
+    model.add(Dense(neurons, activation=activation, kernel_initializer=initializer))
+    model.add(Dense(1, activation='linear'))
+
+    if optimizer == 'adam':
+        opt = Adam(learning_rate=lr)
+    elif optimizer == 'rmsprop':
+        opt = RMSprop(learning_rate=lr)
+
+    model.compile(optimizer=opt, loss='mean_squared_error')
+    return model
+
+
+optimized_model = create_nn_model(optimizer, neurons, lr, activation, initializer)
+
+# Train the optimized model
+history = optimized_model.fit(X_train_scaled, y_train, epochs=50, batch_size=16, verbose=0, validation_split=0.2)
+
+# Predict on the test set
+y_pred = optimized_model.predict(X_test_scaled)
+
+# Calculate the mean squared error
+mse = mean_squared_error(y_test, y_pred)
+
+# Calculate the mean absolute error
+mae = mean_absolute_error(y_test, y_pred)
+
+# Calculate the R-squared score
+r2score = r2_score(y_test, y_pred)
+
+# Calculate the root mean squared error
+rmse = mean_squared_error(y_test, y_pred, squared=False)
+
+# Print the metrics
+print(f"R-squared: {r2score:.4f}")
+print(f"Mean Squared Error: {mse:.4f}")
+print(f"Root Mean Squared Error: {rmse:.4f}")
+print(f"Mean Absolute Error: {mae:.4f}")
+
+# Plot the model loss during training
+plt.plot(history.history['loss'])
+plt.plot(history.history['val_loss'])
+plt.title('Model Loss')
+plt.ylabel('Loss')
+plt.xlabel('Epoch')
+plt.legend(['train', 'validation'], loc='upper right')
+plt.show()
+
+
+

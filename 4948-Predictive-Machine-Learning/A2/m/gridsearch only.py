@@ -1,169 +1,113 @@
-"""GRID SEARCH FOR BEST PARAM"""
+import numpy as np
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression, ElasticNet
+from sklearn.ensemble import RandomForestRegressor, AdaBoostRegressor, ExtraTreesRegressor
+from sklearn.tree import DecisionTreeRegressor
+from sklearn.metrics import r2_score, mean_squared_error, mean_absolute_error
+from sklearn.preprocessing import MinMaxScaler
+from keras.models import Sequential
+from keras.layers import Dense
+from keras.callbacks import EarlyStopping, ModelCheckpoint
+from keras.models import load_model
+import warnings
+from pathlib import Path
+import statsmodels.api as sm
+import numpy as np
+from sklearn.metrics import r2_score, mean_squared_error, mean_absolute_error
+from sklearn import metrics
+from keras.wrappers.scikit_learn import KerasClassifier
+from sklearn.model_selection import GridSearchCV
+from keras.wrappers.scikit_learn import KerasRegressor
 
-"""Initial result for me: Best Param: {'num_layers': 2, 'num_neurons': 16, 'activation_func': 'relu', 'learning_rate': 0.01, 'kernel_initializer': 'uniform', 'train_loss': 45131624.0, 'val_loss': 33958648.0}
 
-SHIOULD be able to use either RandomSearchCV() or GridSearchCV() for at least some of these param searches
+# Load and prepare dataset
+PATH = Path("Tesla.csv")
+df = pd.read_csv(PATH)
+df['Date'] = pd.to_datetime(df['Date'])
+df.set_index('Date', inplace=True)
+
+# Define target variable and features
+X = df[['Open', 'High', 'Low', 'Close', 'Volume']]
+y = df['Adj Close']
+
+# Split the data
+"""Remove random state param when happy with RMSE score"""
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Scale the data
+scaler = MinMaxScaler()
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.transform(X_test)
 
 """
-
-#
-# def grid_search_nn(X_train, y_train, X_val, y_val, hidden_layers, neurons, activations, learning_rates, kernel_initializers):
-#     best_loss = float('inf')
-#     best_params = None
-#     results = []
-#     for layer_size in hidden_layers:
-#         for num_neurons in neurons:
-#             for activation_func in activations:
-#                 for learning_rate in learning_rates:
-#                     for kernel_initializer in kernel_initializers:
-#                         model = Sequential()
-#                         model.add(Dense(num_neurons, input_dim=X_train.shape[1], activation=activation_func, kernel_initializer=kernel_initializer))
-#                         for i in range(layer_size - 1):
-#                             model.add(Dense(num_neurons, activation=activation_func, kernel_initializer=kernel_initializer))
-#                         model.add(Dense(1, activation='linear'))
-#                         opt = Adam(learning_rate=learning_rate)
-#                         model.compile(loss='mse', optimizer=opt, metrics=['mae'])
-#                         history = model.fit(X_train, y_train, epochs=50, batch_size=16, validation_data=(X_val, y_val), verbose=0)
-#                         train_loss = history.history['loss'][-1]
-#                         val_loss = history.history['val_loss'][-1]
-#                         results.append({
-#                             'num_layers': layer_size,
-#                             'num_neurons': num_neurons,
-#                             'activation_func': activation_func,
-#                             'learning_rate': learning_rate,
-#                             'kernel_initializer': kernel_initializer,
-#                             'train_loss': train_loss,
-#                             'val_loss': val_loss
-#                         })
-#                         if val_loss < best_loss:
-#                             best_loss = val_loss
-#                             best_params = {
-#                                 'num_layers': layer_size,
-#                                 'num_neurons': num_neurons,
-#                                 'activation_func': activation_func,
-#                                 'learning_rate': learning_rate,
-#                                 'kernel_initializer': kernel_initializer,
-#                                 'train_loss': train_loss,
-#                                 'val_loss': val_loss
-#                             }
-#     return results, best_params
-#
-#
-# import numpy as np
-# from sklearn.model_selection import train_test_split
-#
-# # Load your dataset and split it into training, validation, and test sets
-# X_train_val, X_test, y_train_val, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-# X_train, X_val, y_train, y_val = train_test_split(X_train_val, y_train_val, test_size=0.2, random_state=42)
-#
-# # Define the hyperparameters to search over
-# hidden_layers = [1, 2, 3]
-# neurons = [8, 16, 32]
-# activations = ['relu', 'sigmoid']
-# learning_rates = [0.001, 0.01, 0.1]
-# kernel_initializers = ['uniform', 'normal', 'glorot_uniform']
-# import datetime
-#
-# # Record the start time
-# start_time = datetime.datetime.now()
-# # Call the grid_search_nn function
-# results, bestParam = grid_search_nn(X_train, y_train, X_val, y_val, hidden_layers, neurons, activations, learning_rates, kernel_initializers)
-#
-# # Print the results
-# for r in results:
-#     print(r)
-# print("Best Param:", bestParam)
-# # Record the end time
-# end_time = datetime.datetime.now()
-#
-# # Calculate the elapsed time
-# elapsed_time = end_time - start_time
-#
-# # Print the elapsed time
-# print("Elapsed time: ", elapsed_time)
-
-# X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)\
-# X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=0.2, random_state=42)
+Create NN Model
+"""
+from keras.optimizers import Adam, RMSprop
 
 
-#
-# import itertools
-# import numpy as np
-# from tensorflow import keras
-#
-#
-# def grid_search(X_train, y_train, X_val, y_val, X_test, y_test,
-#                 layer_sizes=[(10,), (20,), (30,)],
-#                 learning_rates=[0.001, 0.01, 0.1],
-#                 num_layers=[1, 2, 3],
-#                 activations=['relu', 'sigmoid'],
-#                 kernel_initializers=['glorot_uniform', 'he_uniform']):
-#     # Create a list of all possible parameter combinations
-#     param_combinations = list(itertools.product(layer_sizes, learning_rates,
-#                                                 num_layers, activations, kernel_initializers))
-#
-#     # Initialize variables to keep track of results
-#     network_stats = []
-#     best_rmse = np.inf
-#     best_model = None
-#
-#     # Loop over all parameter combinations and train models
-#     for params in param_combinations:
-#
-#         # Unpack the parameter combination
-#         layer_size, learning_rate, num_layers, activation, kernel_initializer = params
-#
-#         # Create the model with the current parameter combination
-#         model = keras.Sequential()
-#         model.add(keras.layers.Dense(layer_size[0], input_dim=X_train.shape[1],
-#                                      kernel_initializer=kernel_initializer,
-#                                      activation=activation))
-#         for i in range(num_layers - 1):
-#             model.add(keras.layers.Dense(layer_size[0], kernel_initializer=kernel_initializer,
-#                                          activation=activation))
-#         model.add(keras.layers.Dense(1, kernel_initializer=kernel_initializer))
-#
-#         # Compile the model with mean squared error loss and the specified learning rate
-#         optimizer = keras.optimizers.Adam(lr=learning_rate)
-#         model.compile(loss='mean_squared_error', optimizer=optimizer)
-#
-#         # Train the model
-#         history = model.fit(X_train, y_train, epochs=100, batch_size=10,
-#                             verbose=0, validation_data=(X_val, y_val))
-#
-#         # Evaluate the model on the test set and save the RMSE
-#         rmse = np.sqrt(model.evaluate(X_test, y_test, verbose=0))
-#
-#         # Keep track of the best model and its parameters
-#         if rmse < best_rmse:
-#             best_rmse = rmse
-#             best_model = model
-#
-#         # Save the RMSE and parameters for this model
-#         network_stats.append({"rmse": rmse, "layer_size": layer_size,
-#                               "learning_rate": learning_rate, "num_layers": num_layers,
-#                               "activation": activation, "kernel_initializer": kernel_initializer})
-#
-#     # Sort the results by RMSE in descending order
-#     network_stats = sorted(network_stats, key=lambda x: x['rmse'])
-#
-#     # Print the results
-#     for result in network_stats:
-#         print(result)
-#
-#     # Return the best model and its RMSE
-#     print("Best model RMSE:", best_rmse)
-#     return best_model
+def create_nn_model(optimizer='adam', neurons=10, lr=0.001, activation='relu', initializer='he_normal'):
+    model = Sequential()
+    model.add(Dense(neurons, activation=activation, kernel_initializer=initializer, input_dim=5))
+    model.add(Dense(neurons, activation=activation, kernel_initializer=initializer))
+    model.add(Dense(1, activation='linear'))
+
+    if optimizer == 'adam':
+        opt = Adam(learning_rate=lr)
+    elif optimizer == 'rmsprop':
+        opt = RMSprop(learning_rate=lr)
+
+    model.compile(optimizer=opt, loss='mean_squared_error')
+    return model
 
 
-# from sklearn.metrics import classification_report
-# def showClassificationReport(y_test, yhats):
-#     # Convert continous predictions to
-#     # 0 or 1.
-#     for i in range(0, len(yhats)):
-#         if(yhats[i]>0.5):
-#             predictions.append(1)
-#         else:
-#             predictions.append(0)
-#     print(classification_report(y_test, predictions))
-# showClassificationReport(y_test, yhats)
+# Define the grid search parameters
+param_grid = {
+    'optimizer': ['adam', 'rmsprop'],
+    'neurons': [10, 20, 30],
+    'lr': [0.001, 0.01, 0.1],
+    'activation': ['relu', 'tanh'],
+    'initializer': ['he_normal', 'he_uniform']
+}
+
+
+
+
+"""
+Perform Grid Search
+"""
+from skopt import BayesSearchCV
+from skopt.space import Real, Categorical, Integer
+from keras.optimizers import Adam
+from scikeras.wrappers import KerasRegressor
+from sklearn.model_selection import RandomizedSearchCV
+from sklearn.model_selection import GridSearchCV
+
+
+# Create a KerasRegressor model
+nn_model = KerasRegressor(build_fn=create_nn_model, epochs=50, batch_size=16, verbose=0, optimizer='adam', neurons=10, lr=0.001, activation='relu', initializer='he_normal')
+
+
+# Define the search space
+search_space = {
+    'optimizer': Categorical(['adam', 'rmsprop']),
+    'neurons': Integer(10, 100),
+    'activation': Categorical(['relu', 'tanh']),
+    'lr': Real(1e-4, 1e-2, prior='log-uniform'),
+}
+
+
+# Perform the Grid search
+grid_search = GridSearchCV(estimator=nn_model, param_grid=param_grid, n_jobs=-1, cv=3, scoring='neg_mean_squared_error')
+grid_search_result = grid_search.fit(X_train_scaled, y_train)
+
+
+# Summarize the results
+print(f"Best: {grid_search_result.best_score_} using {grid_search_result.best_params_}")
+means = grid_search_result.cv_results_['mean_test_score']
+stds = grid_search_result.cv_results_['std_test_score']
+params = grid_search_result.cv_results_['params']
+for mean, stdev, param in zip(means, stds, params):
+    print(f"{mean:.4f} ({stdev:.4f}) with: {param}")
