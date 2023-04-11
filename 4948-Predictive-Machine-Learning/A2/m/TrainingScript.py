@@ -52,12 +52,9 @@ PATH = Path("/Users/mahan/Desktop/Winter2023/Predictive-Machine- 4948/DataSets/c
 pd.set_option('display.max_columns', None)
 pd.set_option('display.width', 1000)
 df = pd.read_csv(PATH, encoding="ISO-8859-1", sep=',')
-df = df.drop_duplicates()
-df.drop(columns=['customer name', 'customer e-mail', 'country'], inplace=True)
-df = pd.get_dummies(df, columns=['gender'])
-# print("Null\n", df.isnull().sum())
-# print(df.info())
-# print(df.head())
+df.drop(columns=['Date'], inplace=True)
+print(df.info())
+print(df.head())
 
 
 def remove_outlier(df, col_name):
@@ -85,8 +82,8 @@ results = {}
 #### Model 1: OLS with ['age', 'annual Salary', 'net worth'] + MinMaxScaler
 
 # Split data into train and test sets
-X = df[['age', 'annual Salary', 'net worth']]
-y = df['car purchase amount']
+X = df[['Open', 'High', 'Low', 'Close', 'Volume']]
+y = df['Adj Close']
 
 X = sm.add_constant(X)  # double check this is needed
 
