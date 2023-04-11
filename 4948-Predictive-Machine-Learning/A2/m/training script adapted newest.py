@@ -117,12 +117,71 @@ for model_name, metrics in results.items():
 
 
 """
-Generate a summary using the cleaned data
+Generate a summary and plot variable graphs
 """
 from pandas_profiling import ProfileReport
-# make a report with the clean data
-prof = ProfileReport(X)
-prof.to_file(output_file='output.html')
+
+# Generate the profiling report
+profile = ProfileReport(df, title="Tesla Dataset Profiling Report", explorative=True)
+
+# Save the report as an HTML file
+profile.to_file("output.html")
+
+# Plot histogram of 'Adj Close'
+plt.figure(figsize=(10, 5))
+sns.histplot(df['Adj Close'], bins=50, kde=True)
+plt.title('Histogram of Adj Close')
+plt.xlabel('Adj Close')
+plt.ylabel('Frequency')
+plt.show()
+
+# Plot box plot of 'Adj Close'
+plt.figure(figsize=(10, 5))
+sns.boxplot(x=df['Adj Close'])
+plt.title('Box Plot of Adj Close')
+plt.xlabel('Adj Close')
+plt.show()
+
+# Plot trends for Open, High, Low, Close, and Adj Close
+plt.figure(figsize=(15, 8))
+plt.plot(df.index, df['Open'], label='Open')
+plt.plot(df.index, df['High'], label='High')
+plt.plot(df.index, df['Low'], label='Low')
+plt.plot(df.index, df['Close'], label='Close')
+plt.plot(df.index, df['Adj Close'], label='Adj Close')
+
+# Customize plot
+plt.title('Trends in Opening, Closing, High, Low, and Adjusted Closing Prices')
+plt.xlabel('Date')
+plt.ylabel('Price')
+plt.legend()
+plt.grid()
+plt.show()
+
+# Plot histogram of 'Volume'
+plt.figure(figsize=(10, 5))
+sns.histplot(df['Volume'], bins=50, kde=True)
+plt.title('Histogram of Trading Volume')
+plt.xlabel('Volume')
+plt.ylabel('Frequency')
+plt.show()
+
+# Plot box plot of 'Volume'
+plt.figure(figsize=(10, 5))
+sns.boxplot(x=df['Volume'])
+plt.title('Box Plot of Trading Volume')
+plt.xlabel('Volume')
+plt.show()
+
+# Create a scatter plot of trading volume vs adjusted closing price
+plt.figure(figsize=(10, 5))
+sns.scatterplot(x=df['Volume'], y=df['Adj Close'])
+plt.title('Scatter Plot: Trading Volume vs Adjusted Closing Price')
+plt.xlabel('Trading Volume')
+plt.ylabel('Adjusted Closing Price')
+plt.show()
+
+
 
 #
 #
